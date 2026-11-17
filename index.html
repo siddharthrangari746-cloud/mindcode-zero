@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#2563eb">
+<title>MINDCODE ZERO — Productivity Hub</title>
+<style>
+:root{--blue:#2563eb;--blue2:#dbeafe;--ink:#172554;--muted:#64748b;--bg:#f4f7fc;--card:#fff;--line:#e5eaf2;--green:#16a34a;--red:#dc2626;--shadow:0 8px 28px rgba(30,64,175,.07)}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.5 system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
+header{background:linear-gradient(120deg,#1d4ed8,#3b82f6);color:#fff;padding:24px 18px 20px}
+.top{max-width:1050px;margin:auto;display:flex;justify-content:space-between;align-items:center;gap:12px}
+.brand{font-size:12px;letter-spacing:2px;font-weight:800;opacity:.9}.heading{font-size:25px;font-weight:850;margin:4px 0}.sub{font-size:13px;opacity:.88}
+.date{font-size:12px;background:#ffffff22;border:1px solid #ffffff44;padding:8px 11px;border-radius:20px;white-space:nowrap}
+nav{max-width:1050px;margin:18px auto 0;display:flex;gap:8px;overflow:auto;padding-bottom:2px}
+nav button{border:1px solid #ffffff55;background:#ffffff18;color:#fff;padding:9px 14px;border-radius:22px;font-weight:700;white-space:nowrap;cursor:pointer}
+nav button.active{background:#fff;color:var(--blue)}
+main{max-width:1050px;margin:22px auto;padding:0 16px 40px}
+.panel{display:none}.panel.active{display:block}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:16px}
+.card,.stat{background:var(--card);border:1px solid var(--line);border-radius:17px;padding:16px;box-shadow:var(--shadow)}
+.stat small{color:var(--muted);font-weight:650}.stat strong{display:block;font-size:25px;margin-top:4px;color:var(--blue)}
+.section-head{display:flex;justify-content:space-between;align-items:center;gap:10px;margin:8px 0 14px}
+h2{font-size:19px;margin:0}h3{font-size:15px;margin:0 0 12px}
+.muted{color:var(--muted);font-size:13px}
+.row{display:flex;gap:9px;align-items:center}.row.wrap{flex-wrap:wrap}
+input,textarea,select{font:inherit;color:var(--ink);background:#fff;border:1px solid #d7dfeb;border-radius:11px;padding:11px 12px;min-width:0}
+input:focus,textarea:focus{outline:2px solid #bfdbfe;border-color:var(--blue)}
+input[type=text],textarea{width:100%}
+button{font:inherit;cursor:pointer}
+.primary{border:0;border-radius:11px;background:var(--blue);color:#fff;font-weight:750;padding:11px 15px}
+.secondary{border:1px solid #cbd5e1;border-radius:11px;background:#fff;color:var(--ink);padding:9px 12px;font-weight:650}
+.danger{border:0;background:#fee2e2;color:#b91c1c;border-radius:9px;padding:7px 10px;font-weight:700}
+.addline{display:grid;grid-template-columns:1fr auto;gap:8px;margin-bottom:14px}
+.task{display:flex;align-items:center;gap:11px;padding:12px 0;border-bottom:1px solid var(--line)}
+.task:last-child{border-bottom:0}.task input{width:19px;height:19px;accent-color:var(--blue)}
+.task .taskname{flex:1;overflow-wrap:anywhere}.done .taskname{text-decoration:line-through;color:#94a3b8}
+.progress{height:9px;background:#e8eef8;border-radius:99px;overflow:hidden;margin-top:9px}.progress span{display:block;height:100%;background:var(--blue);border-radius:99px;width:0}
+.habits{display:grid;gap:10px}.habit{display:flex;justify-content:space-between;align-items:center;gap:10px;border:1px solid var(--line);border-radius:13px;padding:12px}
+.habit-name{font-weight:750}.days{display:flex;gap:5px}.day{width:29px;height:29px;border-radius:50%;border:1px solid #cbd5e1;background:#fff;color:var(--muted);font-size:11px;font-weight:800}.day.checked{background:var(--blue);border-color:var(--blue);color:#fff}
+.note-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}.note{border:1px solid var(--line);border-radius:14px;padding:13px;background:#fff}.note textarea{min-height:115px;resize:vertical;margin:8px 0}.note-title{font-weight:800}
+.empty{text-align:center;padding:24px;color:var(--muted)}
+footer{text-align:center;color:#94a3b8;font-size:12px;padding:18px}
+@media(max-width:620px){.stats{gap:8px}.stat{padding:12px}.stat strong{font-size:21px}.note-grid{grid-template-columns:1fr}.top{align-items:flex-start;flex-direction:column}.date{align-self:flex-start}.heading{font-size:23px}.habit{align-items:flex-start;flex-direction:column}.days{width:100%;justify-content:space-between}.day{width:34px;height:34px}}
+</style>
+</head>
+<body>
+<header>
+  <div class="top">
+    <div><div class="brand">MINDCODE ZERO</div><div class="heading">Productivity Hub</div><div class="sub">Plan with intention. Execute with discipline.</div></div>
+    <div class="date" id="todayLabel"></div>
+  </div>
+  <nav>
+    <button class="active" data-tab="dashboard">Overview</button>
+    <button data-tab="todo">Daily To-Do</button>
+    <button data-tab="habits">Habit Tracker</button>
+    <button data-tab="notes">Notes</button>
+  </nav>
+</header>
+<main>
+<section class="panel active" id="dashboard">
+  <div class="section-head"><div><h2>Today's overview</h2><div class="muted">Small wins compound.</div></div></div>
+  <div class="stats">
+    <div class="stat"><small>Tasks completed</small><strong id="dashTasks">0/0</strong></div>
+    <div class="stat"><small>Habits completed today</small><strong id="dashHabits">0/0</strong></div>
+    <div class="stat"><small>Saved notes</small><strong id="dashNotes">0</strong></div>
+  </div>
+  <div class="card">
+    <h3>Daily productivity score</h3>
+    <div style="display:flex;align-items:baseline;gap:8px"><strong id="score" style="font-size:34px;color:var(--blue)">0%</strong><span class="muted">based on today's tasks and habits</span></div>
+    <div class="progress"><span id="scoreBar"></span></div>
+    <p class="muted" id="scoreMessage">Add tasks and habits to start tracking your day.</p>
+  </div>
+  <div class="card" style="margin-top:14px">
+    <div class="section-head"><h3>Quick actions</h3></div>
+    <div class="row wrap"><button class="primary" onclick="showTab('todo')">＋ Add a task</button><button class="secondary" onclick="showTab('habits')">Track a habit</button><button class="secondary" onclick="showTab('notes')">Write a note</button></div>
+  </div>
+  <p class="muted" style="margin-top:14px">Your information is stored in this browser on this phone. It is not synced to other devices.</p>
+</section>
+<section class="panel" id="todo">
+  <div class="section-head"><div><h2>Daily To-Do</h2><div class="muted" id="todoDate"></div></div><button class="secondary" onclick="clearCompleted()">Clear completed</button></div>
+  <div class="card">
+    <div class="addline"><input id="taskInput" type="text" maxlength="120" placeholder="Add a task for today…" /><button class="primary" onclick="addTask()">Add</button></div>
+    <div id="taskList"></div>
+    <div class="progress"><span id="taskBar"></span></div><div class="muted" id="taskProgress" style="margin-top:7px">0% completed</div>
+  </div>
+</section>
+<section class="panel" id="habits">
+  <div class="section-head"><div><h2>Habit Tracker</h2><div class="muted">Tap a day to mark a habit complete.</div></div></div>
+  <div class="card">
+    <div class="addline"><input id="habitInput" type="text" maxlength="70" placeholder="New habit (e.g. Read 20 minutes)" /><button class="primary" onclick="addHabit()">Add</button></div>
+    <div class="muted" style="margin-bottom:12px">Last 7 days · Today is the rightmost circle</div>
+    <div id="habitList" class="habits"></div>
+  </div>
+</section>
+<section class="panel" id="notes">
+  <div class="section-head"><div><h2>Notes</h2><div class="muted">Your notes save automatically on this device.</div></div><button class="primary" onclick="addNote()">＋ New note</button></div>
+  <div id="noteList" class="note-grid"></div>
+</section>
+</main>
+<footer>MINDCODE ZERO · Built for consistency</footer>
+<script>
+const KEY='mindcode-zero-hub-v1';
+const today=()=>new Date().toISOString().slice(0,10);
+const dateOffset=(n)=>{const d=new Date();d.setDate(d.getDate()+n);return d.toISOString().slice(0,10)};
+let state=load();
+function load(){try{return JSON.parse(localStorage.getItem(KEY))||{tasks:{},habits:[],notes:[]}}catch(e){return{tasks:{},habits:[],notes:[]}}}
+function save(){localStorage.setItem(KEY,JSON.stringify(state));renderAll()}
+function tasksToday(){return state.tasks[today()]||(state.tasks[today()]=[])}
+function esc(s){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+function showTab(name){document.querySelectorAll('.panel').forEach(p=>p.classList.toggle('active',p.id===name));document.querySelectorAll('nav button').forEach(b=>b.classList.toggle('active',b.dataset.tab===name))}
+document.querySelectorAll('nav button').forEach(b=>b.addEventListener('click',()=>showTab(b.dataset.tab)));
+function addTask(){let el=document.getElementById('taskInput'),v=el.value.trim();if(!v)return;tasksToday().push({id:crypto.randomUUID?crypto.randomUUID():String(Date.now()),text:v,done:false});el.value='';save()}
+document.getElementById('taskInput').addEventListener('keydown',e=>{if(e.key==='Enter')addTask()});
+function toggleTask(id){let t=tasksToday().find(x=>x.id===id);if(t)t.done=!t.done;save()}
+function removeTask(id){state.tasks[today()]=tasksToday().filter(x=>x.id!==id);save()}
+function clearCompleted(){state.tasks[today()]=tasksToday().filter(x=>!x.done);save()}
+function addHabit(){let el=document.getElementById('habitInput'),v=el.value.trim();if(!v)return;state.habits.push({id:String(Date.now()),name:v,checks:{}});el.value='';save()}
+document.getElementById('habitInput').addEventListener('keydown',e=>{if(e.key==='Enter')addHabit()});
+function toggleHabit(id,day){let h=state.habits.find(x=>x.id===id);if(!h)return;h.checks[day]=!h.checks[day];save()}
+function removeHabit(id){state.habits=state.habits.filter(x=>x.id!==id);save()}
+function addNote(){state.notes.unshift({id:String(Date.now()),title:'New note',body:''});save()}
+function updateNote(id,field,value){let n=state.notes.find(x=>x.id===id);if(n){n[field]=value;localStorage.setItem(KEY,JSON.stringify(state));renderStats()}}
+function removeNote(id){if(confirm('Delete this note?')){state.notes=state.notes.filter(x=>x.id!==id);save()}}
+function renderTasks(){let arr=tasksToday(),done=arr.filter(x=>x.done).length,p=arr.length?Math.round(done/arr.length*100):0;document.getElementById('taskList').innerHTML=arr.length?arr.map(t=>`<div class="task ${t.done?'done':''}"><input type="checkbox" ${t.done?'checked':''} onchange="toggleTask('${t.id}')"><div class="taskname">${esc(t.text)}</div><button class="danger" onclick="removeTask('${t.id}')">Delete</button></div>`).join(''):'<div class="empty">No tasks yet. Add your first task above.</div>';document.getElementById('taskBar').style.width=p+'%';document.getElementById('taskProgress').textContent=`${done} of ${arr.length} tasks completed · ${p}%`}
+function renderHabits(){let days=Array.from({length:7},(_,i)=>dateOffset(i-6));document.getElementById('habitList').innerHTML=state.habits.length?state.habits.map(h=>`<div class="habit"><div><div class="habit-name">${esc(h.name)}</div><button class="danger" style="margin-top:7px" onclick="removeHabit('${h.id}')">Delete</button></div><div class="days">${days.map((d,i)=>`<button class="day ${h.checks[d]?'checked':''}" title="${d}" onclick="toggleHabit('${h.id}','${d}')">${['S','M','T','W','T','F','S'][new Date(d+'T12:00:00').getDay()]}</button>`).join('')}</div></div>`).join(''):'<div class="empty">No habits yet. Add one above.</div>'}
+function renderNotes(){document.getElementById('noteList').innerHTML=state.notes.length?state.notes.map(n=>`<article class="note"><input class="note-title" aria-label="Note title" value="${esc(n.title)}" oninput="updateNote('${n.id}','title',this.value)" /><textarea aria-label="Note content" placeholder="Write something…" oninput="updateNote('${n.id}','body',this.value)">${esc(n.body)}</textarea><div class="row" style="justify-content:space-between"><span class="muted">Saved on this device</span><button class="danger" onclick="removeNote('${n.id}')">Delete</button></div></article>`).join(''):'<div class="empty" style="grid-column:1/-1">No notes yet. Create your first note.</div>'}
+function renderStats(){let ts=tasksToday(),td=ts.filter(t=>t.done).length,hd=state.habits.filter(h=>h.checks[today()]).length,total=ts.length+state.habits.length,done=td+hd,score=total?Math.round(done/total*100):0;document.getElementById('dashTasks').textContent=`${td}/${ts.length}`;document.getElementById('dashHabits').textContent=`${hd}/${state.habits.length}`;document.getElementById('dashNotes').textContent=state.notes.length;document.getElementById('score').textContent=score+'%';document.getElementById('scoreBar').style.width=score+'%';document.getElementById('scoreMessage').textContent=total?(score===100?'All tracked items complete. Great execution!':`${total-done} tracked item(s) left. Keep going.`):'Add tasks and habits to start tracking your day.'}
+function renderAll(){let d=new Date();document.getElementById('todayLabel').textContent=d.toLocaleDateString(undefined,{weekday:'short',day:'numeric',month:'short',year:'numeric'});document.getElementById('todoDate').textContent=d.toLocaleDateString(undefined,{weekday:'long',day:'numeric',month:'long'});renderTasks();renderHabits();renderNotes();renderStats()}
+renderAll();
+</script>
+</body>
+</html>
